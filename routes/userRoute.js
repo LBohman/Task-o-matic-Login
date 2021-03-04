@@ -13,17 +13,23 @@ router.get("/register", (req, res) =>{
 // hash password!
 router.post("/register", async (req, res) => {
     const errors = [];
+    if(!req.body.name) {
+        errors.push("Username is required");
+    }
+
+    if(!req.body.password) {
+        errors.push(" Password is required");
+    }
+
     if(!req.body.name || !req.body.password) {
-        errors.push("Field is required");
-        //or a success screen with link/button to login?
-        res.render("error.ejs", { errors });
+        res.render("register.ejs", { errors });
     }
 
     const user = await new User({
         name: req.body.name,
         password: req.body.password
     }).save();
-    res.redirect("/");
+    res.redirect("/login");
 });
 
 router.get("/login", (req, res) => {
@@ -39,9 +45,9 @@ router.post("/login", async (req, res) => {
 
     if(username[0].name === name && userPassword[0].password === password) {
         res.send("Inloggning lyckades!");
+    } else {
+        res.send("Inloggningen misslyckades, försök igen.");
     }
-
-    res.send("Inloggningen misslyckades, försök igen.");
 });
 
 module.exports = router;
