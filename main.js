@@ -2,11 +2,13 @@ const express = require('express');
 const tasksRouter = require('./routes/tasks');
 const userRouter = require('./routes/userRoute');
 const bodyParser = require('body-parser');
+const cookieParser = require("cookie-parser");
 const mongoose = require('mongoose');
 const Task = require('./model/task');
 require('dotenv').config();
 
 const app = express();
+app.use(cookieParser());
 
 app.use(express.static(__dirname + '/public'));
 

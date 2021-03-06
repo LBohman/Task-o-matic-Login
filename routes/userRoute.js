@@ -1,18 +1,29 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const verifyToken = require("../middleware/userVerify");
+
 
 const User = require("../model/user");
 
 const router = express.Router();
 
-const errors = " ";
+const errors = [];
+
+router.get("/test", verifyToken, (req, res) => {
+    res.send("You're authorized.");
+});
+
+router.get("/logout", (req, res) => {
+    res.clearCookie("jwtToken").send("Logged out. Cookies cleared.");
+});
+
 router.get("/register", (req, res) =>{
     res.render("register.ejs", { errors });
 });
 
-// hash password!
 router.post("/register", async (req, res) => {
-    const errors = [];
     if(!req.body.name) {
         errors.push("Username is required");
     }
@@ -25,9 +36,12 @@ router.post("/register", async (req, res) => {
         res.render("register.ejs", { errors });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
     const user = await new User({
         name: req.body.name,
-        password: req.body.password
+        password: hashedPassword
     }).save();
     res.redirect("/login");
 });
@@ -39,15 +53,25 @@ router.get("/login", (req, res) => {
 router.post("/login", async (req, res) => {
     const name = req.body.name;
     const password = req.body.password;
+    
+    const user = await User.findOne({name:name});
 
-    const username = await User.find({name:name});
-    const userPassword = await User.find({password:password});
+    const passwordCompare = await bcrypt.compare(password, user.password);
 
-    if(username[0].name === name && userPassword[0].password === password) {
-        res.send("Inloggning lyckades!");
-    } else {
-        res.send("Inloggningen misslyckades, försök igen.");
+    if(passwordCompare) {
+        const jwtToken = await jwt.sign({ user:user }, process.env.SECRETKEY);
+        
+        if(jwtToken) {
+            const cookie = req.cookies.jwtToken;
+            
+            if(!cookie) {
+                res.cookie("jwtToken", jwtToken, { maxAge: 3600000, httpOnly: true });
+            }
+            
+            return res.redirect("/");
+        }
     }
+    res.send("Try again");
 });
 
 module.exports = router;

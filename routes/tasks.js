@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Task = require('../model/task');
+const verifyToken = require('../middleware/userVerify');
 require('dotenv').config();
 
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken ,async (req, res) => {
     const data = await Task.find();
     res.render('index.ejs', { data: data });
 });
