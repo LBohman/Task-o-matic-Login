@@ -6,7 +6,7 @@ const verifyToken = require('../middleware/userVerify');
 require('dotenv').config();
 
 
-router.get('/', verifyToken ,async (req, res) => {
+router.get('/tasks', verifyToken, async (req, res) => {
     const data = await Task.find();
     res.render('index.ejs', { data: data });
 });

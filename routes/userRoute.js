@@ -11,12 +11,8 @@ const router = express.Router();
 
 const errors = [];
 
-router.get("/test", verifyToken, (req, res) => {
-    res.send("You're authorized.");
-});
-
-router.get("/logout", (req, res) => {
-    res.clearCookie("jwtToken").send("Logged out. Cookies cleared.");
+router.get("/", (req, res) => {
+    res.render("login.ejs");
 });
 
 router.get("/register", (req, res) =>{
@@ -72,6 +68,10 @@ router.post("/login", async (req, res) => {
         }
     }
     res.send("Try again");
+});
+
+router.get("/logout", (req, res) => {
+    res.clearCookie("jwtToken").send("Logged out. Cookies cleared.");
 });
 
 module.exports = router;
