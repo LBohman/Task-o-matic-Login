@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
                 res.cookie("jwtToken", jwtToken, { maxAge: 3600000, httpOnly: true });
             }
             
-            return res.redirect("/");
+            return res.redirect("/tasks");
         }
     }
     res.send("Try again");
