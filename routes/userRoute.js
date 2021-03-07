@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-    res.clearCookie("jwtToken").send("Logged out. Cookies cleared.");
+    res.clearCookie("jwtToken").redirect("/");
 });
 
 module.exports = router;
