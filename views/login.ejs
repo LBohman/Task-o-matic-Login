@@ -11,19 +11,19 @@
 <body>
     <div class="container">
         <h1 class="mt-5">Task-o-matic</h1>
-        <a href="/logout" class="btn btn-danger mb-3">Logout</a>
-        <%- include('_taskInput') %>
+        
+        <form action="/login" method="post" class="form-control mb-3">
+            <label for="name" class="form-label">Username:</label>
+            <input type="text" id="name" name="name" class="form-control mb-2">
+            <label for="password" class="form-label" >Password:</label>
+            <input type="password" id="password" name="password" class="form-control mb-2">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
 
-        <% data.forEach(task => { %>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted"><%= task.date.toLocaleDateString() %></h6>
-                <h5 class="card-text"><%= task.task %></h5>
-                <a href="/edit/<%= task._id %>" class="btn btn-secondary mt-2">Edit</a>
-                <a href="/delete/<%= task._id %>" class="btn btn-danger mt-2">Delete</a>
-            </div>
+        <div>
+            <span>Don't have an account?</span>
+            <a href="/register">Register</a>
         </div>
-        <% }) %>
     </div>
 </body>
 </html>
