@@ -14,7 +14,7 @@ router.get('/tasks', verifyToken, async (req, res) => {
 router.post('/add', async (req, res) => {
     try{
         await new Task({ task: req.body.task }).save();
-        res.redirect('/');
+        res.redirect('/tasks');
     } catch (err) {
         console.log(err);
     }
@@ -34,12 +34,12 @@ router.post('/edit', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-    res.redirect('/');
+    res.redirect('/tasks');
 });
 
 router.get('/delete/:id', async (req, res) => {
     await Task.deleteOne({ _id: req.params.id });
-    res.redirect('/');
+    res.redirect('/tasks');
 });
 
 module.exports = router;
